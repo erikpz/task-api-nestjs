@@ -8,11 +8,8 @@ import { TasksModule } from './tasks/tasks.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongoModule.forRoot(
-      process.env.MONGODB_URI,
-      process.env.MONGODB_NAME
-      ),
-      TasksModule,
+    MongoModule.forRoot(process.env.MONGODB_URI, process.env.MONGODB_NAME),
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
