@@ -26,7 +26,7 @@ export class TaskRepository {
     try {
       const objId = new ObjectId(id);
       const result = await this.collection.findOne({ _id: objId });
-      return result as Task;
+      return { ...result } as Task;
     } catch (e) {
       throw new InternalServerErrorException('Server Error');
     }
@@ -36,7 +36,6 @@ export class TaskRepository {
     try {
       let createTask = { ...task, creationDate: new Date() };
       const result = await this.collection.insertOne(createTask);
-      console.log('resss', result);
       if (!result.acknowledged) {
         throw new InternalServerErrorException('Server Error');
       }
