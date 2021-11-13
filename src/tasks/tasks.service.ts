@@ -4,14 +4,17 @@ import { TaskRepository } from 'src/repositories/task.repository';
 
 @Injectable()
 export class TasksService {
+  constructor(private taskRepository: TaskRepository) {}
 
-    constructor(private taskRepository: TaskRepository){}
+  async getAllTasks() {
+    return this.taskRepository.getAll();
+  }
 
-    async getAllTasks(){
-        return this.taskRepository.getAll()
-    }
+  async getTaskById(id: string) {
+    return this.taskRepository.getById(id);
+  }
 
-    async createTask(createTaskDto: CreateTaskDTO){
-        return this.taskRepository.create(createTaskDto)
-    }
+  async createTask(createTaskDto: CreateTaskDTO) {
+    return this.taskRepository.create(createTaskDto);
+  }
 }

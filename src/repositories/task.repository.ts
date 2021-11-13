@@ -3,6 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectDb } from 'nest-mongodb';
 import { CreateTaskDTO } from 'src/dto/create-task.dto';
 import { Task } from 'src/interfaces/task.interface';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class TaskRepository {
@@ -16,6 +17,19 @@ export class TaskRepository {
     try {
       const result = await this.collection.find({}).toArray();
       return result as Task[];
+    } catch (e) {
+      throw new HttpException('Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getById(id: string): Promise<Task> {
+    if (!ObjectId.isValid(id)) {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
+    try {
+      const objId = new ObjectId(id);
+      const result = await this.collection.findOne({ _id: objId });
+      return result as Task;
     } catch (e) {
       throw new HttpException('Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
