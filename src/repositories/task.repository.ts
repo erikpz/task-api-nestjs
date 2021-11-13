@@ -1,5 +1,5 @@
 import * as mongo from 'mongodb';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectDb } from 'nest-mongodb';
 import { CreateTaskDTO } from 'src/dto/create-task.dto';
 import { Task } from 'src/interfaces/task.interface';
@@ -18,20 +18,17 @@ export class TaskRepository {
       const result = await this.collection.find({}).toArray();
       return result as Task[];
     } catch (e) {
-      throw new HttpException('Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Server Error');
     }
   }
 
   async getById(id: string): Promise<Task> {
-    if (!ObjectId.isValid(id)) {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    }
     try {
       const objId = new ObjectId(id);
       const result = await this.collection.findOne({ _id: objId });
       return result as Task;
     } catch (e) {
-      throw new HttpException('Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Server Error');
     }
   }
 
@@ -41,16 +38,13 @@ export class TaskRepository {
       const result = await this.collection.insertOne(createTask);
       console.log('resss', result);
       if (!result.acknowledged) {
-        throw new HttpException(
-          'Server Error',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        throw new InternalServerErrorException('Server Error');
       }
       let newTask = { _id: result.insertedId, ...createTask };
 
       return newTask;
     } catch (e) {
-      throw new HttpException('Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException('Server Error');
     }
   }
 }

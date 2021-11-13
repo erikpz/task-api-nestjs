@@ -7,6 +7,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateTaskDTO } from 'src/dto/create-task.dto';
+import { ObjectIdValidationPipe } from 'src/pipes/ObjectIdValidationPipe';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
@@ -19,7 +20,7 @@ export class TasksController {
   }
 
   @Get(':id')
-  getTask(@Param('id') id: string) {
+  getTask(@Param('id', new ObjectIdValidationPipe()) id: string) {
     return this.taskService.getTaskById(id);
   }
 
